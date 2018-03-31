@@ -11,6 +11,7 @@ import json
 import base64
 import usb.core
 import usb.util
+
 from getch import getch, pause
 
 # Protocol command bytes
@@ -22,23 +23,17 @@ FIRE    = 0x10
 STOP    = 0x20
 
 DEVICE = None
-DEVICE_TYPE = None
 
-# Setup the Cannon
+# Setup the cannon
 def setup_usb():
+    
+    # Find the device
     global DEVICE 
-    global DEVICE_TYPE
-
     DEVICE = usb.core.find(idVendor=0x2123, idProduct=0x1010)
-
     if DEVICE is None:
         DEVICE = usb.core.find(idVendor=0x0a81, idProduct=0x0701)
-        if DEVICE is None:
-            raise ValueError("Device not found")
-        else:
-            DEVICE_TYPE = "Original"
-    else:
-        DEVICE_TYPE = "Thunder"
+    if DEVICE is None:
+        raise ValueError("Device not found")
 
     # On Linux we need to detach usb HID first
     if "Linux" == platform.system():
